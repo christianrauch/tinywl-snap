@@ -1,0 +1,77 @@
+name: tinywl
+version: '0.8.1'
+base: core18
+summary: TinyWL is a minimal Wayland compositor based on wlroots
+description: |
+  This is the "minimum viable product" Wayland compositor based on wlroots. It aims to implement a Wayland compositor in the fewest lines of code possible, while still supporting a reasonable set of features. Reading this code is the best starting point for anyone looking to build their own Wayland compositor based on wlroots.
+
+grade: stable
+confinement: classic
+
+parts:
+  wayland-protocols:
+    source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
+    source-tag: '1.18'
+    plugin: autotools
+    build-packages:
+      - libwayland-bin
+
+  wlroots:
+    after: [wayland-protocols]
+    source: https://gitlab.freedesktop.org/wlroots/wlroots.git
+    source-commit: '02d664b3' # 17 Oct, 2019
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - --pkg-config-path=$SNAPCRAFT_STAGE/share/pkgconfig
+      - -Dfreerdp=disabled
+      - -Dlibcap=enabled
+      - -Dlogind=enabled
+      - -Dlogind-provider=systemd
+      - -Dx11-backend=enabled
+      - -Dexamples=false
+    build-packages:
+      - libwayland-dev
+      - libegl1-mesa-dev
+      - libgles2-mesa-dev
+      - libgbm-dev
+      - libinput-dev
+      - libxkbcommon-dev
+      - libpixman-1-dev
+      - libpng-dev
+      - libsystemd-dev
+      - libcap-dev
+      - libxcb-xinput-dev
+    stage-packages:
+      - libdrm2
+      - libegl1
+      - libevdev2
+      - libgbm1
+      - libgles2
+      - libglvnd0
+      - libgudev-1.0-0
+      - libinput10
+      - libmtdev1
+      - libpixman-1-0
+      - libwacom2
+      - libwayland-client0
+      - libwayland-egl1
+      - libwayland-server0
+      - libxkbcommon0
+      - libx11-6
+      - libxcb-xinput0
+    stage: [usr]
+
+  tinywl:
+    after: [wlroots,wayland-protocols]
+    source: https://gitlab.freedesktop.org/wlroots/wlroots.git
+    source-commit: '02d664b3' # 17 Oct, 2019
+    source-subdir: tinywl
+    plugin: make
+    build-environment: [PKG_CONFIG_PATH: "$SNAPCRAFT_STAGE/share/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig"]
+    artifacts: [tinywl]
+    stage: [tinywl]
+
+apps:
+  tinywl:
+    command: tinywl
