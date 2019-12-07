@@ -73,6 +73,11 @@ parts:
     artifacts: [tinywl]
     stage: [tinywl]
 
+  launcher:
+    plugin: dump
+    source: launcher
+
 apps:
   tinywl:
-    command: tinywl
+    # start `tinywl` via wrapper script
+    command: tinywl.sh
