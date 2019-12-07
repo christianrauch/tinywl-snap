@@ -18,9 +18,10 @@ parts:
 
   wlroots:
     after: [wayland-protocols]
-    source: https://gitlab.freedesktop.org/wlroots/wlroots.git
-    source-commit: '02d664b3' # 17 Oct, 2019
+    source: https://github.com/swaywm/wlroots.git
+    source-commit: '0.8.1'
     plugin: meson
+    meson-version: 0.51.2
     meson-parameters:
       - --prefix=/usr
       - --pkg-config-path=$SNAPCRAFT_STAGE/share/pkgconfig
@@ -64,8 +65,8 @@ parts:
 
   tinywl:
     after: [wlroots,wayland-protocols]
-    source: https://gitlab.freedesktop.org/wlroots/wlroots.git
-    source-commit: '02d664b3' # 17 Oct, 2019
+    source: https://github.com/swaywm/wlroots.git
+    source-commit: '0.8.1'
     source-subdir: tinywl
     plugin: make
     build-environment: [PKG_CONFIG_PATH: "$SNAPCRAFT_STAGE/share/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig"]
